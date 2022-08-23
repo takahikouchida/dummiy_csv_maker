@@ -8,11 +8,12 @@ while($data = fgetcsv($fp))
 {
 	if ( ! $isHeader)
 	{
-$sql = "INSERT INTO public.address(\"都道府県名\",\"市区町村名\",\"大字町丁目コード\",\"大字町丁目名\",\"緯度\",\"経度\")VALUES (
-'" . mb_convert_encoding($data[1], "utf-8", "sjis") . "', 
-'" . mb_convert_encoding($data[3], "utf-8", "sjis") . "', 
-'" . mb_convert_encoding($data[4], "utf-8", "sjis") . "', 
-'" . mb_convert_encoding($data[5], "utf-8", "sjis") . "', 
+$sql = "INSERT INTO public.address(\"都道府県名\",\"市区町村コード\",\"市区町村名\",\"大字町丁目コード\",\"大字町丁目名\",\"緯度\",\"経度\")VALUES (
+'" . mb_convert_encoding($data[1], "UTF-8", "SJIS-win") . "', 
+'" . mb_convert_encoding($data[2], "UTF-8", "SJIS-win") . "', 
+'" . mb_convert_encoding($data[3], "UTF-8", "SJIS-win") . "', 
+'" . mb_convert_encoding($data[4], "UTF-8", "SJIS-win") . "', 
+'" . mb_convert_encoding($data[5], "UTF-8", "SJIS-win") . "', 
 " . $data[6] . ", 
 " . $data[7] . " );
 ";

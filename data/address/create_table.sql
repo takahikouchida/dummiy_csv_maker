@@ -1,5 +1,6 @@
 CREATE TABLE IF NOT EXISTS public.address
 (
+    id serial,
     "都道府県コード" character varying(100) ,
     "都道府県名" character varying(100) ,
     "市区町村コード" character varying(100) ,

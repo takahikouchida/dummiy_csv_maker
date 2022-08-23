@@ -19,19 +19,28 @@ import SiteIcon from '@mui/icons-material/FileCopy';
 import TextField from '@mui/material/TextField';
 import axios from "axios";
 import { saveAs } from 'file-saver'
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
+
 
 const theme = createTheme();
 
 export default function Main() {
 
-    const [num, setNum] = React.useState(1);
+    const [num,  setNum] = React.useState(1);
+    const [btnDisabled, setBtnDisabled] = React.useState(false);
+    const [URL, setURL] = React.useState("");
 
     const handleChange = (evt) => {
         //console.debug(evt.target.value);
         setNum(evt.target.value);
+        setURL("./service/make.php?num="+evt.target.value);
+
     }
 
     const handleClick = async () => {
+        setBtnDisabled(true);
         let params = new URLSearchParams();
         params.append("num", num);
 
@@ -41,19 +50,23 @@ export default function Main() {
                 return err.response;
             });
         if (res.status != 200) {
-            // 例外発生時の処理
-            console.log("例外発生時の処理");
+            console.log("-- ERROR --");
+            setBtnDisabled(false);
+
         } else {
             if (res.data.status === "error") {
                 // エラー表示
             } else {
-                console.debug(res.data);
-                let data = JSON.stringify(res.data);
+//                console.debug(res.data);
+//                let data = JSON.stringify(res.data);
                 //BOMを付与する（Excelでの文字化け対策）
                 const bom = new Uint8Array([0xef, 0xbb, 0xbf]);
-                const blob = new Blob([bom, data], { type: "application/json" });
+                const blob = new Blob([bom, res.data], { type: "application/octet-stream" });
+                //const blob = new Blob([bom, data]);
                 //ダウンロード
-                saveAs(blob, `csv_${num}.geojson`);
+                saveAs(blob, `csv_${num}.csv`);
+                setBtnDisabled(false);
+
             }
         }
     }
@@ -66,7 +79,7 @@ export default function Main() {
                 <Toolbar>
                     <SiteIcon sx={{ mr: 2 }}  />
                     <Typography variant="h6" color="inherit" noWrap>
-                        Dummy CSV Maker
+                        GEO CSV Maker
                     </Typography>
                 </Toolbar>
             </AppBar>
@@ -81,7 +94,7 @@ export default function Main() {
                     <Container maxWidth="md">
 
                         <Typography variant="h6" align="center" color="text.secondary" paragraph>
-                            ニセ個人情報CSVファイルを生成します。<br/>
+                            住所と座標を含んだCSVファイルを生成します。<br/>
                         </Typography>
 
                         <Stack
@@ -94,13 +107,15 @@ export default function Main() {
                                 required
                                 type="number"
                                 id="outlined-name"
-                                label="レコード数（１万件まで）"
-                               value={num}
-                               onChange={handleChange}
+                                label="レコード数(<10000)"
+                                value={num}
+                                onChange={handleChange}
                                 size="small"
                             />
-
-                            <Button variant="contained" onClick={handleClick} >make</Button>
+                            <Box>
+                            {/*<Button variant="contained" onClick={handleClick} disabled={btnDisabled}>make</Button>*/}
+                            <Button target="_blank"　href={URL} variant="contained" disabled={btnDisabled}>make</Button>
+                            </Box>
                         </Stack>
                     </Container>
                 </Box>
