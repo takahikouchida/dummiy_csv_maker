@@ -1,6 +1,5 @@
 <?php
 $input_num = $_REQUEST["num"];
-$is_sjis =$_REQUEST["isSJIS"];
 if(!is_numeric($input_num)) {
 	exit;
 }
@@ -8,7 +7,7 @@ if($input_num>1000001) {
 	exit;
 }
 // db connect
-$dbconn = pg_connect("host=host.docker.internal port=5432 dbname=gaiku user=postgres password=postgres");
+$dbconn = pg_connect("host=localhost port=5432 dbname={dbname} user={user} password={password}");
 
 $sql = "select max(id) as recode_num from address";
 $result = pg_query($dbconn, $sql);
