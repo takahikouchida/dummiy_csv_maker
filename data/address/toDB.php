@@ -2,20 +2,21 @@
 
 $target = $argv[1];
 
+file_put_contents($target."_utf",mb_convert_encoding(file_get_contents($target),"UTF-8", "SJIS-win"));
+
 $isHeader = true;
-$fp = fopen($target, 'r');
+$fp = fopen($target."_utf", 'r');
 while($data = fgetcsv($fp))
 {
 	if ( ! $isHeader)
 	{
-$sql = "INSERT INTO public.address(\"都道府県名\",\"市区町村コード\",\"市区町村名\",\"大字町丁目コード\",\"大字町丁目名\",\"緯度\",\"経度\")VALUES (
-'" . mb_convert_encoding($data[1], "UTF-8", "SJIS-win") . "', 
-'" . mb_convert_encoding($data[2], "UTF-8", "SJIS-win") . "', 
-'" . mb_convert_encoding($data[3], "UTF-8", "SJIS-win") . "', 
-'" . mb_convert_encoding($data[4], "UTF-8", "SJIS-win") . "', 
-'" . mb_convert_encoding($data[5], "UTF-8", "SJIS-win") . "', 
-" . $data[6] . ", 
-" . $data[7] . " );
+
+		if(!array_key_exists(7,$data)) {
+			print_r($data);
+			exit;
+		}
+
+		$sql = "INSERT INTO public.address(\"都道府県名\",\"市区町村コード\",\"市区町村名\",\"大字町丁目コード\",\"大字町丁目名\",\"緯度\",\"経度\")VALUES ('" . $data[1] . "', '" . $data[2] . "', '" . $data[3] . "', '" . $data[4] . "', '" . $data[5]. "', " . $data[6] . ", " . $data[7] . " );
 ";
 		echo $sql;
 	} else {

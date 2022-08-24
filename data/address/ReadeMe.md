@@ -9,3 +9,12 @@
 # file copy
 
     cp.sh
+
+# conver sql query
+
+    sh toDB.sh > address.sql
+
+# import postgresql
+
+    psql < address.sql
+
